@@ -15,7 +15,7 @@ use {defmt_rtt as _, panic_probe as _};
 
 bind_interrupts!(struct Irqs {
     RNG => rng::InterruptHandler<RNG>;
-    EGU0_SWI0 => nrf_sdc::mpsl::LowPrioInterruptHandler;
+    EGU0 => nrf_sdc::mpsl::LowPrioInterruptHandler;
     CLOCK_POWER => nrf_sdc::mpsl::ClockInterruptHandler;
     RADIO => nrf_sdc::mpsl::HighPrioInterruptHandler;
     TIMER0 => nrf_sdc::mpsl::HighPrioInterruptHandler;
@@ -55,7 +55,7 @@ fn build_sdc<'d, const N: usize>(
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let p = embassy_nrf::init(Default::default());
-    let mpsl_p = mpsl::Peripherals::new(p.RTC0, p.TIMER0, p.TEMP, p.PPI_CH19, p.PPI_CH30, p.PPI_CH31);
+    let mpsl_p = mpsl::Peripherals::new(p.RTC0, p.TIMER0, p.TIMER1, p.PPI_CH0, p.PPI_CH1, p.PPI_CH2);
     let lfclk_cfg = mpsl::raw::mpsl_clock_lfclk_cfg_t {
         source: mpsl::raw::MPSL_CLOCK_LF_SRC_RC as u8,
         rc_ctiv: mpsl::raw::MPSL_RECOMMENDED_RC_CTIV as u8,
@@ -68,8 +68,7 @@ async fn main(spawner: Spawner) {
     spawner.must_spawn(mpsl_task(&*mpsl));
 
     let sdc_p = sdc::Peripherals::new(
-        p.PPI_CH17, p.PPI_CH18, p.PPI_CH20, p.PPI_CH21, p.PPI_CH22, p.PPI_CH23, p.PPI_CH24, p.PPI_CH25, p.PPI_CH26,
-        p.PPI_CH27, p.PPI_CH28, p.PPI_CH29,
+        p.PPI_CH3, p.PPI_CH4, p.PPI_CH5, p.PPI_CH6, p.PPI_CH7, p.PPI_CH8, p.PPI_CH9, p.PPI_CH10, p.PPI_CH11, p.PPI_CH12,
     );
 
     let mut rng = rng::Rng::new(p.RNG, Irqs);

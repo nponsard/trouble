@@ -70,6 +70,10 @@ nrf52840 = [
     "embassy-nrf/nrf52840",
     "nrf-sdc/nrf52840",
 ]
+nrf5340 = [
+    "embassy-nrf/nrf5340-net",
+    "nrf-sdc/nrf5340-net",
+]
 security = [
     "trouble-example-apps/security",
 ]
